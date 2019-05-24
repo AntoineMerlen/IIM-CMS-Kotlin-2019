@@ -10,7 +10,7 @@ Rendu pour la semaine Kotlin du 29/04 au 03/05
 Login Admin : admin / admin
 ```
 
-Bdd : [dump.sql]('./dump.sql')
+Bdd : [dump.sql]('/dump.sql')
 
 ## Exigences Kotlin :
 
