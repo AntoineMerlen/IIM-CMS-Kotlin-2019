@@ -19,6 +19,8 @@ import merlen.antoine.cms.control.ArticlePresenterImpl
 import merlen.antoine.cms.control.ArticleListPresenterImpl
 import merlen.antoine.cms.model.*
 import merlen.antoine.cms.tpl.IndexContext
+import java.awt.SystemColor.*
+import java.time.*
 
 data class AuthSession(val user: String)
 class App
@@ -37,6 +39,10 @@ fun main() {
             get("article/{id}") {
 
                 val controller = appComponents.getArticlePresenter(object : ArticlePresenter.View{
+                    override fun redirect() {
+                        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                    }
+
                     override fun displayArticle(article: Article?, comments: List<Comment>) {
                         launch {
                             val context = object {
@@ -64,6 +70,10 @@ fun main() {
             }
             post("article/{id}") {
                 val controller = appComponents.getArticlePresenter(object : ArticlePresenter.View {
+                    override fun redirect() {
+                        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                    }
+
                     override fun displayNotFound() {
                         launch {
                             call.respond(HttpStatusCode.NotFound)
@@ -105,10 +115,10 @@ fun main() {
             controller.start()
             }
 
-
-
             install(Sessions) {
-                cookie<AuthSession> ("Auth_SESSION", SessionStorageMemory())
+                cookie<AuthSession> ("Auth_SESSION", SessionStorageMemory()){
+                    cookie.duration = Duration.ofMinutes(30)
+                }
             }
 
             install(Authentication) {
@@ -164,12 +174,134 @@ fun main() {
                         })
                         controller.start()
                     }
+
+
+                    post("/admin") {
+                        val controller = appComponents.getArticleListPresenter(object : ArticleListPresenter.View {
+                            override fun displayArticleList(list: List<Article>) {
+                                val context = IndexContext(list)
+                                launch{
+                                    val session = call.sessions.get<AuthSession>()
+                                    if (session != null && session.user == "admin"){
+                                        call.respond(FreeMarkerContent("admin/index.ftl", context, "e"))
+                                    }
+                                    else{
+                                        call.respond(FreeMarkerContent("index.ftl", context, "e"))
+                                    }
+                                }
+                            }
+                        })
+
+                        val postParameters : Parameters = call.receiveParameters()
+                        val title: String? = postParameters["title"]
+                        val text: String? = postParameters["text"]
+                        if (title != null && text != null){
+                            controller.postArticle(title, text)
+                        }
+                    }
+
+                    get("/admin/article/{id}") {
+
+                        val controller = appComponents.getArticlePresenter(object : ArticlePresenter.View{
+                            override fun redirect() {
+                                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                            }
+
+                            override fun displayArticle(article: Article?, comments: List<Comment>) {
+                                launch {
+                                    val context = object {
+                                        val article: Article? = article
+                                        val comments: List<Comment> = comments
+                                    }
+                                    call.respond(FreeMarkerContent("admin/article.ftl", context, "e"))
+                                }
+                            }
+
+                            override fun displayNotFound() {
+                                launch {
+                                    call.respond(HttpStatusCode.NotFound)
+                                }
+                            }
+                        })
+
+                        val id = call.parameters["id"]!!.toIntOrNull()
+                        if(id == null){
+                            call.respond(HttpStatusCode.NotFound)
+                        }else{
+                            controller.start(id)
+                        }
+
+                    }
+
+                    post("/admin/article/{id}") {
+                        val controller = appComponents.getArticlePresenter(object : ArticlePresenter.View {
+                            override fun redirect() {
+                                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                            }
+
+                            override fun displayNotFound() {
+                                launch {
+                                    call.respond(HttpStatusCode.NotFound)
+                                }
+                            }
+
+                            override fun displayArticle(article: Article?, comments: List<Comment>) {
+                                val context = mapOf(
+                                    "article" to article,
+                                    "comments" to comments
+                                )
+                                launch {
+                                    call.respond(FreeMarkerContent("admin/article.ftl", context, "e"))
+                                }
+                            }
+
+                        })
+                        val postParameters : Parameters = call.receiveParameters()
+                        val text: String? = postParameters["comments"]
+                        val id = call.parameters["id"]!!.toIntOrNull()
+                        if (id == null){
+                            call.respond(HttpStatusCode.NotFound)
+                        } else{
+                            controller.postComment(text, id)
+                        }
+
+                    }
+
+                    route("admin/article/{article_id}/comment/{comment_id}") {
+                        get {
+                            val articleId = call.parameters["article_id"]!!.toIntOrNull()
+
+                            val controller = appComponents.getArticlePresenter(object : ArticlePresenter.View {
+                                override fun redirect() {
+                                    launch {
+                                        call.respondRedirect("/admin/article/$articleId")
+                                    }
+                                }
+
+                                override fun displayNotFound() {
+                                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                                }
+
+                                override fun displayArticle(article: Article?, comments: List<Comment>) {
+                                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                                }
+
+                            })
+
+                            val id = call.parameters["comment_id"]!!.toIntOrNull()
+                            if (id != null) {
+                                controller.deleteComment(id)
+                            }
+                        }
+                    }
+
+
                     route("/deleteArticle/{id}") {
                         get("") {
                             val controller = appComponents.getArticleListPresenter(object : ArticleListPresenter.View {
                                 override fun displayArticleList(list: List<Article>) {
                                     launch {
-                                        call.respondRedirect("/")
+                                        call.respondRedirect("/admin")
                                     }
                                 }
                             })

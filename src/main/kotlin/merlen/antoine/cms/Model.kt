@@ -11,13 +11,15 @@ interface Model {
 
     fun getArticleComments(id: Int): List<Comment>
 
-    //fun postCreateArticle(title: String?, text: String?)
+    fun postArticle(title: String, content: String)
+
+    fun deleteComment(id : Int)
 
     fun deleteArticle(id: Int)
 
     fun postCreateComment(text: String?, articleId: Int)
 
-    fun getUser(id: Int): User?
-
-    fun getUsersList(): List<User>
+//    fun getUser(id: Int): User?
+//
+//    fun getUsersList(): List<User>
 }

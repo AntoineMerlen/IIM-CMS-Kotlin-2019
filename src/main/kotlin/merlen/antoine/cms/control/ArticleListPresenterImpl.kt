@@ -10,6 +10,11 @@ class ArticleListPresenterImpl (val model: Model, val view: ArticleListPresenter
         view.displayArticleList(list)
     }
 
+    override fun postArticle(title: String, text: String) {
+        model.postArticle(title, text)
+        start()
+    }
+
     override fun deleteArticle(id: Int){
         model.deleteArticle(id)
     }

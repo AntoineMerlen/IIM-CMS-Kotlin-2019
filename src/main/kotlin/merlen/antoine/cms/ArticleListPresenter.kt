@@ -6,6 +6,8 @@ interface ArticleListPresenter {
 
     fun start()
 
+    fun postArticle(title: String, text: String)
+
     fun deleteArticle(id: Int)
 
     interface View {

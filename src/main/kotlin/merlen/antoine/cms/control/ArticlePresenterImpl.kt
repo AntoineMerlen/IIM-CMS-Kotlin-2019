@@ -22,4 +22,9 @@ class ArticlePresenterImpl(val model: Model, val view: ArticlePresenter.View): A
             start(articleId)
         }
     }
+
+    override fun deleteComment(id : Int){
+        model.deleteComment(id)
+        view.redirect()
+    }
 }

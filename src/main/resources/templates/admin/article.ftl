@@ -1,6 +1,7 @@
 <html>
     <head>
         <head><link rel="stylesheet" href="/static/css/style.css"></head>
+        <button><a href="/admin">Retour page accueil</a></button>
         Page de l'article n°${article.id}
     </head>
     <body>
@@ -17,9 +18,14 @@
                     <div><input type="submit" value="Valider" /></div>
         </form>
 
-        <#list comments as c>
-            <li><p>${c.text}</p></li>
+        <ul>
+        <#list comments as comment>
+            <li>
+                <p>${comment.text}</p>
+                <button><a href="/admin/article/${article.id}/comment/${comment.id}">Supprimer</a></button> <br>
+            </li>
         </#list>
+        </ul>
 
     </body>
 </html>
