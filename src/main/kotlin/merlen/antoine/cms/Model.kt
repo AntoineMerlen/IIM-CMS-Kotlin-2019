@@ -11,7 +11,7 @@ interface Model {
 
     fun getArticleComments(id: Int): List<Comment>
 
-    fun postArticle(title: String, content: String)
+    fun postArticle(title: String, text: String)
 
     fun deleteComment(id : Int)
 

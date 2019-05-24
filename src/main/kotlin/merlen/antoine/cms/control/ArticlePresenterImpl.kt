@@ -19,7 +19,13 @@ class ArticlePresenterImpl(val model: Model, val view: ArticlePresenter.View): A
     override fun postComment(text: String?, articleId: Int){
         if (text != null || text!!.length > 0){
             model.postCreateComment(text, articleId)
-            start(articleId)
+            val article = model.getArticle(articleId)
+            if(article != null){
+                val comments = model.getArticleComments(articleId)
+                view.displayArticle(article, comments)
+            }else{
+                view.displayNotFound()
+            }
         }
     }
 

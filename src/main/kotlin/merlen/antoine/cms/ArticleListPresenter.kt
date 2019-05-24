@@ -11,9 +11,7 @@ interface ArticleListPresenter {
     fun deleteArticle(id: Int)
 
     interface View {
-        fun displayArticleList( list: List<Article>) {
-
-        }
+        fun displayArticleList( list: List<Article>)
     }
 
 }
