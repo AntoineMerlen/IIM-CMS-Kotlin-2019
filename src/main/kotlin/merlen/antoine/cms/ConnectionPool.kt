@@ -1,8 +1,7 @@
 package merlen.antoine.cms
 
-import java.sql.Connection
-import java.sql.DriverManager
-import java.util.concurrent.ConcurrentLinkedQueue
+import java.sql.*
+import java.util.concurrent.*
 
 class ConnectionPool(val url: String, val user: String, val password: String) {
 
@@ -12,10 +11,9 @@ class ConnectionPool(val url: String, val user: String, val password: String) {
     fun getConnection(): Connection {
         val connection = queue.poll()
 
-        if (connection == null)
-        {
+        if (connection == null) {
             return DriverManager.getConnection(url, user, password)
-        }else{
+        } else {
             return connection
         }
     }
@@ -26,12 +24,11 @@ class ConnectionPool(val url: String, val user: String, val password: String) {
         // list.add(c)
     }
 
-    inline fun useConnection(f: (Connection) -> Unit)
-    {
+    inline fun useConnection(f: (Connection) -> Unit) {
         val connection = getConnection()
         try {
             f(connection)
-        }finally {
+        } finally {
             releaseConnection(connection)
         }
     }

@@ -3,17 +3,17 @@ package merlen.antoine.cms
 import com.nhaarman.mockitokotlin2.*
 import merlen.antoine.cms.control.*
 import merlen.antoine.cms.model.*
-import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.*
 
 class PresenterTests {
 
     @Test
-    fun testArticleListPresenter(){
+    fun testArticleListPresenter() {
 
 
         val list = listOf(Article(1, "Un", null), Article(2, "Deux", null))
 
-        val model = mock<Model>(){
+        val model = mock<Model>() {
             on { getArticleList() } doReturn list
         }
 
@@ -31,7 +31,7 @@ class PresenterTests {
 
 
     @Test
-    fun testArticlePresenter(){
+    fun testArticlePresenter() {
 
 
         val comments = listOf<Comment>(
@@ -42,7 +42,7 @@ class PresenterTests {
         val article = Article(1, "Un", null)
 
         val id = 1
-        val model = mock<Model>{
+        val model = mock<Model> {
             on { getArticle(id) } doReturn article
             on { getArticleComments(id) } doReturn comments
         }
@@ -61,9 +61,9 @@ class PresenterTests {
     }
 
     @Test
-    fun testInvalidArticlePresenter(){
+    fun testInvalidArticlePresenter() {
 
-        val model = mock<Model>{
+        val model = mock<Model> {
             on { getArticle(any()) } doReturn null
         }
 
@@ -80,12 +80,12 @@ class PresenterTests {
     }
 
     @Test
-    fun testAddArticle(){
+    fun testAddArticle() {
         val title = "Blabla"
         val text = "Toubiiii"
         val articles: List<Article> = listOf(Article(1, "Un", "blabla 1"), Article(2, "Deux", "blabla 2"))
 
-        val model = mock<Model>{ }
+        val model = mock<Model> { }
 
         val view = mock<ArticleListPresenter.View>()
 
@@ -99,13 +99,13 @@ class PresenterTests {
     }
 
     @Test
-    fun testAddComment(){
+    fun testAddComment() {
         val article = Article(1, "Un", "efede")
 
         val text = "Test"
         val comments: List<Comment> = listOf(Comment(1, 4, "blabla 1"), Comment(2, 3, "blabla 2"))
 
-        val model = mock<Model>{
+        val model = mock<Model> {
             on { getArticle(article.id) } doReturn article
             on { getArticleComments(article.id) } doReturn comments
         }

@@ -1,4 +1,4 @@
-body{
+body {
     background: #42a9f7;
 }
 
@@ -11,9 +11,17 @@ body{
     margin-bottom: 15px;
 }
 
-.alert.success {background-color: #4CAF50;}
-.alert.info {background-color: #2196F3;}
-.alert.warning {background-color: #ff9800;}
+.alert.success {
+    background-color: #4CAF50;
+}
+
+.alert.info {
+    background-color: #2196F3;
+}
+
+.alert.warning {
+    background-color: #ff9800;
+}
 
 .closebtn {
     margin-left: 15px;

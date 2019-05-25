@@ -2,12 +2,13 @@
     <head>
         <head><link rel="stylesheet" href="/static/css/style.css"></head>
         <button><a href="/">Retour page accueil</a></button>
-        Page de l'article n°${article.id}
     </head>
     <body>
-        <h1>
+        <br>
+        <h1>Page de l'article n°${article.id}</h1>
+        <h2>
             ${article.title}
-        </h1>
+        </h2>
         <p>
             ${article.text}
         </p>
@@ -15,6 +16,7 @@
         <form method="post">
                     <div>Commentaire :</div>
                     <div><input type="text" name="comments" /></div>
+                    <br>
                     <div><input type="submit" value="Valider" /></div>
         </form>
 

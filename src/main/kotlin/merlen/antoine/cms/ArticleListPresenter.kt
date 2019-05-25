@@ -1,6 +1,6 @@
 package merlen.antoine.cms
 
-import merlen.antoine.cms.model.Article
+import merlen.antoine.cms.model.*
 
 interface ArticleListPresenter {
 
@@ -11,7 +11,7 @@ interface ArticleListPresenter {
     fun deleteArticle(id: Int)
 
     interface View {
-        fun displayArticleList( list: List<Article>)
+        fun displayArticleList(list: List<Article>)
     }
 
 }

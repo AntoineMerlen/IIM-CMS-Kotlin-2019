@@ -1,9 +1,8 @@
 package merlen.antoine.cms
 
 import merlen.antoine.cms.model.*
-import java.awt.SystemColor.*
 
-class MysqlModel(val pool: ConnectionPool): Model {
+class MysqlModel(private val pool: ConnectionPool) : Model {
 
     override fun getArticleComments(id: Int): List<Comment> {
         val list = ArrayList<Comment>()
@@ -31,9 +30,8 @@ class MysqlModel(val pool: ConnectionPool): Model {
 
         pool.useConnection { connection ->
             val stmt = connection.prepareStatement("SELECT * FROM articles")
-            stmt.executeQuery().use {result ->
-                while (result.next())
-                {
+            stmt.executeQuery().use { result ->
+                while (result.next()) {
                     list += Article(
                         result.getInt("id"),
                         result.getString("title"),
@@ -47,12 +45,11 @@ class MysqlModel(val pool: ConnectionPool): Model {
 
     override fun getArticle(id: Int): Article? {
         pool.useConnection { connection ->
-            connection.prepareStatement("SELECT * FROM articles WHERE id = ?").use {stmt ->
+            connection.prepareStatement("SELECT * FROM articles WHERE id = ?").use { stmt ->
                 stmt.setInt(1, id)
 
                 stmt.executeQuery().use { result ->
-                    if(result.next())
-                    {
+                    if (result.next()) {
                         return Article(
                             result.getInt("id"),
                             result.getString("title"),
@@ -67,7 +64,7 @@ class MysqlModel(val pool: ConnectionPool): Model {
 
     override fun postCreateComment(text: String?, articleId: Int) {
         pool.useConnection { connection ->
-            connection.prepareStatement("INSERT INTO comments (articleId, text) VALUES (?, ?)").use {stmt ->
+            connection.prepareStatement("INSERT INTO comments (articleId, text) VALUES (?, ?)").use { stmt ->
                 stmt.setInt(1, articleId)
                 stmt.setString(2, text)
 
@@ -76,9 +73,9 @@ class MysqlModel(val pool: ConnectionPool): Model {
         }
     }
 
-    override fun deleteComment(id : Int) {
+    override fun deleteComment(id: Int) {
         pool.useConnection { connection ->
-            connection.prepareStatement("DELETE FROM comments WHERE id = ?").use {stmt ->
+            connection.prepareStatement("DELETE FROM comments WHERE id = ?").use { stmt ->
                 stmt.setInt(1, id)
                 stmt.execute()
             }
@@ -87,7 +84,7 @@ class MysqlModel(val pool: ConnectionPool): Model {
 
     override fun postArticle(title: String, text: String) {
         pool.useConnection { connection ->
-            connection.prepareStatement("INSERT INTO articles (title, text) VALUES (?, ?)").use {stmt ->
+            connection.prepareStatement("INSERT INTO articles (title, text) VALUES (?, ?)").use { stmt ->
                 stmt.setString(1, title)
                 stmt.setString(2, text)
 
@@ -98,11 +95,11 @@ class MysqlModel(val pool: ConnectionPool): Model {
 
     override fun deleteArticle(id: Int) {
         pool.useConnection { connection ->
-            connection.prepareStatement("DELETE FROM articles WHERE id = ?").use {stmt ->
+            connection.prepareStatement("DELETE FROM articles WHERE id = ?").use { stmt ->
                 stmt.setInt(1, id)
                 stmt.executeUpdate()
             }
-            connection.prepareStatement("DELETE FROM comments WHERE articleId = ?").use {stmt ->
+            connection.prepareStatement("DELETE FROM comments WHERE articleId = ?").use { stmt ->
                 stmt.setInt(1, id)
                 stmt.executeUpdate()
             }
